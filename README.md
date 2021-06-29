@@ -44,9 +44,12 @@ gcc -O wafreport.c -o wafreport
 ## Usage
 
 The utility expects to receive data on `stdin`, one request / log entry per line, in the form
-  ``INBOUND_ANOMALY_SCORE`` ``OUTBOUND_ANOMALY_SCORE``
+
+``INBOUND_ANOMALY_SCORE`` ``OUTBOUND_ANOMALY_SCORE``
+
 e.g.
-  5 0
+
+``5 0``
 
 Intended to be used with grep, piping in anomaly scores like so:
 
