@@ -98,6 +98,8 @@ int read_in_scores(int *score_count_in, int *score_count_out, int *invalid_in,
 			continue;
 		}
 
+
+		/* Store the inbound anomaly score that's been seen */
 		if (score_in < 0)
 			(*invalid_in)++;
 		else if (score_in > MAX_SCORE)
@@ -105,6 +107,7 @@ int read_in_scores(int *score_count_in, int *score_count_out, int *invalid_in,
 		else
 			score_count_in[score_in]++;
 
+		/* Store the outbound anomaly score that's been seen */
 		if (score_out < 0)
 			(*invalid_out)++;
 		else if (score_out > MAX_SCORE)
