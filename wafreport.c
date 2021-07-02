@@ -42,6 +42,8 @@
 
 int read_in_scores(int *score_count_in, int *score_count_out, int *invalid_in, int *invalid_out);
 void print_stats (const int *score_count_in, const int *score_count_out, int invalid_in, int invalid_out, int scores_read);
+double avg_mean(const int *score_count_array, int scores_read);
+double avg_median(const int *score_count_array, int scores_read);
 int digit_width(int n);
 
 int main(void)
@@ -130,9 +132,8 @@ int read_in_scores(int *score_count_in, int *score_count_out, int *invalid_in,
 void print_stats (const int *score_count_in, const int *score_count_out,
                   int invalid_in, int invalid_out, int scores_read)
 {
-	int i, dig_width_in, dig_width_out, dig_width_scores, running_total,
-	    lower_value;
-	double mean, median, cumulative;
+	int i, dig_width_in, dig_width_out, dig_width_scores, running_total;
+	double cumulative;
 
 
 	/* How many digits in the largest inbound score recorded? */
@@ -184,36 +185,8 @@ void print_stats (const int *score_count_in, const int *score_count_out,
 	putchar('\n');
 
 	/* Calculate and print averages */
-	for (i = 0, mean = 0.0; i <= MAX_SCORE; i++)
-		mean += i * score_count_in[i];
-	mean /= scores_read;
-	printf("Mean: %.2f    ", mean);
-
-	/* Median: case: odd number of elements */
-	if (scores_read % 2) {
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_in[i];
-			if (median >= (scores_read + 1) / 2)
-				break;
-		}
-		median = i;
-		printf("Median: %.2f\n", median);
-	/* Median: case: even number of elements - take an average */
-	} else {
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_in[i];
-			if (median >= scores_read / 2)
-				break;
-		}
-		lower_value = i;
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_in[i];
-			if (median >= (scores_read / 2) + 1)
-				break;
-		}
-		median = (double) (lower_value + i) / 2;
-		printf("Median: %.2f\n", median);
-	}
+	printf("Mean: %.2f    ", avg_mean(score_count_in, scores_read));
+	printf("Median: %.2f\n", avg_median(score_count_in, scores_read));
 
 	putchar('\n');
 	putchar('\n');
@@ -253,35 +226,64 @@ void print_stats (const int *score_count_in, const int *score_count_out,
 	putchar('\n');
 
 	/* Calculate and print averages */
-	for (i = 0, mean = 0.0; i <= MAX_SCORE; i++)
-		mean += i * score_count_out[i];
+	printf("Mean: %.2f    ", avg_mean(score_count_out, scores_read));
+	printf("Median: %.2f\n", avg_median(score_count_out, scores_read));
+}
+
+
+/******************************************************************************
+ * avg_mean: Take an array of scores and the number of scores read, and from  *
+ *           that calculate and return the mean score                         *
+ ******************************************************************************/
+double avg_mean(const int *score_count_array, int scores_read)
+{
+	int i;
+	double mean = 0.0;
+
+	for (i = 0; i <= MAX_SCORE; i++)
+		mean += i * score_count_array[i];
 	mean /= scores_read;
-	printf("Mean: %.2f    ", mean);
+
+	return mean;
+}
+
+
+/******************************************************************************
+ * avg_median: Take an array of scores and the number of scores read, and     *
+ *             from that calculate and return the median score                *
+ ******************************************************************************/
+double avg_median(const int *score_count_array, int scores_read)
+{
+	int i, lower_value;
+	double median = 0.0;
 
 	/* Median: case: odd number of elements */
 	if (scores_read % 2) {
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_out[i];
+		for (i = 0; i <= MAX_SCORE; i++) {
+			median += score_count_array[i];
 			if (median >= (scores_read + 1) / 2)
 				break;
 		}
 		median = i;
-		printf("Median: %.2f\n", median);
+		return median;
+
 	/* Median: case: even number of elements - take an average */
 	} else {
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_out[i];
+		for (i = 0; i <= MAX_SCORE; i++) {
+			median += score_count_array[i];
 			if (median >= scores_read / 2)
 				break;
 		}
 		lower_value = i;
-		for (i = 0, median = 0.0; i <= MAX_SCORE; i++) {
-			median += score_count_out[i];
+
+		median = 0.0;
+		for (i = 0; i <= MAX_SCORE; i++) {
+			median += score_count_array[i];
 			if (median >= (scores_read / 2) + 1)
 				break;
 		}
 		median = (double) (lower_value + i) / 2;
-		printf("Median: %.2f\n", median);
+		return median;
 	}
 }
 
