@@ -35,10 +35,10 @@ Mean: 0.00    Median: 0.00
 
 ## Compiling
 
-A simple one-line command takes care of compilation:
+Use `make` to take care of compilation:
 
 ```bash
-gcc -O wafreport.c -o wafreport
+make
 ```
 
 ## Usage
